@@ -4,7 +4,13 @@ module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   presets: [require("nativewind/preset")],
   theme: {
-    extend: {},
+    extend: {
+      // Primary farger for SocAdemy (kan endres)
+      colors: {
+        primary: "#2F7FA3",
+        secondary: "#8FC3D9",
+      },
+    },
   },
   plugins: [],
 }
