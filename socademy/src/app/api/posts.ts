@@ -41,7 +41,7 @@ export async function createPost(input:{
 }
 
 export async function updatePost(id: number, input: {title?:string; text?: string}) : Promise<ApiTask>{
-     const response = await fetch(`${BASE_URL}/posts`, {
+     const response = await fetch(`${BASE_URL}/posts/${id}`, {
         method: "PATCH", 
         headers:{"content-type": "application/json"},
         body: JSON.stringify(input),
@@ -50,16 +50,28 @@ export async function updatePost(id: number, input: {title?:string; text?: strin
 
     if(!response.ok){
         throw new Error(
-            json.error?.message
+            json.error?.message ?? `could not update (${response.status})`
         )
     }
 
     return z.object({data: ApiTaskScehma}).parse(json).data;
 }
-export async function getPost(params:type) {
-     const response = await fetch(`${BASE_URL}/posts`);
+export async function getPost(id: number) : Promise<ApiTask> {
+     const response = await fetch(`${BASE_URL}/posts/${id}`,);
+    if(!response.ok){
+        throw new Error(`Could not get post(${response.status})`);
+    }
+    const json = await response.json();
+    return z.object({data: ApiTaskScehma}).parse(json).data;
 }
 
-export async function removePost(params:type) {
-     const response = await fetch(`${BASE_URL}/posts`);
+export async function removePost(id: number) : Promise<void> {
+     const response = await fetch(`${BASE_URL}/posts/${id}`,{
+        method: "DELETE",
+     }
+     );
+    if(response.ok) return; 
+    const json = await response.json();
+    throw new Error(json.error?.message ?? `Could not delete post(${response.status})`)
+
 }
