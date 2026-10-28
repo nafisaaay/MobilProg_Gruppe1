@@ -1,6 +1,6 @@
 import {z} from "zod";
 
-export const BASE_URL = "https://socademy.socademy-hiof.workers.dev/api/v1";
+export const BASE_URL = "https://socademy.socademy-hiof.workers.dev/api/v3";
 
 export const ApiPostScehma = z.object({
     id: z.number(),
