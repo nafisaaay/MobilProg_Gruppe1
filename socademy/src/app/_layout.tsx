@@ -1,5 +1,4 @@
 import { PostProvider } from "../context/PostContext";
-import "./global.css";
 
 import { Stack } from "expo-router";
 
