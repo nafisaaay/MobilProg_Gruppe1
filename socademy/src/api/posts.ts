@@ -1,6 +1,7 @@
 import {z} from "zod";
+import { SERVER_URL } from "../lib/auth.client";
 
-export const BASE_URL = "https://socademy.socademy-hiof.workers.dev/api/v3";
+export const BASE_URL = `${SERVER_URL}/api/v3`;
 
 export const ApiPostScehma = z.object({
     id: z.number(),
