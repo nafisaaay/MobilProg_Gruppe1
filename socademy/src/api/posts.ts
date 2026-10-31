@@ -1,6 +1,7 @@
 import {z} from "zod";
+import { authClient, SERVER_URL } from "../lib/auth-client";
 
-export const BASE_URL = "https://socademy.socademy-hiof.workers.dev/api/v3";
+export const BASE_URL = `${SERVER_URL}/api/v3`;
 
 export const ApiPostScehma = z.object({
     id: z.number(),
@@ -10,8 +11,20 @@ export const ApiPostScehma = z.object({
 
 export type ApiPost = z.infer<typeof ApiPostScehma>;
 
+// Headere med sesjonen, så serveren vet hvem som sender forespørselen.
+// Sesjonen ligger i SecureStore: getCookie() henter den og gjør den om til en Cookie-header.
+async function authHeaders() {
+    return {
+        "content-type": "application/json",
+        Cookie: await authClient.getCookie(),
+    };
+}
+
 export async function getAllPosts(): Promise<ApiPost[]> {
-    const response = await fetch(`${BASE_URL}/posts`);
+    const response = await fetch(`${BASE_URL}/posts`, {
+        headers: await authHeaders(),
+        credentials: "omit",
+    });
 
     if(!response.ok){
         throw new Error(`Could not get all posts(${response.status})`);
@@ -26,7 +39,7 @@ export async function createPost(input:{
 }) : Promise<ApiPost>{
      const response = await fetch(`${BASE_URL}/posts`, {
         method: "POST",
-        headers:{"content-type": "application/json"},
+        headers: await authHeaders(),
         body: JSON.stringify(input),
      });
      const json = await response.json();
@@ -43,7 +56,7 @@ export async function createPost(input:{
 export async function updatePost(id: number, input: {title?:string; text?: string}) : Promise<ApiPost>{
      const response = await fetch(`${BASE_URL}/posts/${id}`, {
         method: "PATCH", 
-        headers:{"content-type": "application/json"},
+        headers: await authHeaders(),
         body: JSON.stringify(input),
      });
     const json = await response.json();
@@ -68,8 +81,10 @@ export async function getPost(id: number) : Promise<ApiPost> {
 export async function removePost(id: number) : Promise<void> {
      const response = await fetch(`${BASE_URL}/posts/${id}`,{
         method: "DELETE",
-     }
-     );
+        headers: await authHeaders(),
+        credentials: "omit",
+     });
+     
     if(response.ok) return; 
     const json = await response.json();
     throw new Error(json.error?.message ?? `Could not delete post(${response.status})`)
