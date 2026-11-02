@@ -16,9 +16,9 @@ export default function TabsLayout() {
                 }}
             />
             <Tabs.Screen
-                name="feed"
+                name="forum"
                 options={{
-                    title: "Feed",
+                    title: "Forum",
                     tabBarIcon: ({ color, size }) => (
                         <Ionicons name="list" color={color} size={size} />
                     ),
