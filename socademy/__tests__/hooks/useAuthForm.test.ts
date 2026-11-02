@@ -8,7 +8,9 @@ describe("useAuthForm", () => {
         const onSubmit = jest.fn();
         const { result } = await renderHook(() => useAuthForm(loginSchema, onSubmit));
 
-        await act(() => result.current.submit({ email: "", password: "" })),
+        await act(async () => {
+            await result.current.submit({ email: "", password: "" });
+        });
 
         expect(result.current.errorFor("email")).toBe("Skriv inn e-post");
         expect(onSubmit).not.toHaveBeenCalled(); // Sjekker at ugyldig input aldri blir sendt til serveren.
@@ -17,9 +19,11 @@ describe("useAuthForm", () => {
     it("kaller onSubmit med gydlige data", async () => {
         // En "stuntmann" som later som innloggingen lyktes
         const onSubmit = jest.fn().mockResolvedValue(undefined); //returnerer promise som lykkes
-        const { result } = await renderHook(() => useAuthForm(loginSchema, onSubmit));
+        const { result } = await renderHook( () => useAuthForm(loginSchema, onSubmit));
 
-        await act(() => result.current.submit({ email: " tina@hiof.no ", password: "hemmelig" }));
+        await act(async () => {
+            await result.current.submit({ email: " tina@hiof.no ", password: "hemmelig" });
+        });
 
         expect(onSubmit).toHaveBeenCalledWith({ email: "tina@hiof.no", password: "hemmelig" });
     });
@@ -30,7 +34,9 @@ describe("useAuthForm", () => {
         const { result } = await renderHook(() => useAuthForm(loginSchema, onSubmit));
 
         // gyldige felt, så Zod slipper det gjennom til serveren
-        await act(() => result.current.submit({ email: "tina@hiof.no", password: "feilpassord" }));
+        await act(async () => {
+            await result.current.submit({ email: "tina@hiof.no", password: "feilpassord" });
+        });
 
         // feilen vises, og knappen er ikke lenger i "logger inn.."
         expect(result.current.error).toBe("Feil passord");

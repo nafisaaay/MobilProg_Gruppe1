@@ -78,8 +78,10 @@ describe("PostContext", () => {
         const { result } = await renderHook(() => usePosts(), { wrapper });
         await waitFor(() => expect(result.current.isLoading).toBe(false));
 
-        await act(() => result.current.addToApi({ title: "andre", text: "gængster" }));
+        await act(async () => {
+            await result.current.addToApi({ title: "andre", text: "gængster" });
+        });
 
         expect(result.current.posts).toEqual([post2, post1]);
     });
-})
+});
