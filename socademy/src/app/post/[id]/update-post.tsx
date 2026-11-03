@@ -3,11 +3,14 @@ import { View, Text, TextInput, Pressable, StyleSheet } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { usePosts } from "../../../context/PostContext";
 import { Theme } from "../../../constants/theme";
+import useOrientation from "../../../hooks/useOrientation";
 
 export default function EditPostScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { posts, updateToApi } = usePosts();
   const post = posts.find((p) => p.id === Number(id));
+  
+  const { isPhoneLandscape } = useOrientation();
 
   const [title, setTitle] = useState(post?.title ?? "");
   const [text, setText] = useState(post?.text ?? "");
@@ -36,7 +39,7 @@ export default function EditPostScreen() {
   };
 
   return (
-    <View style={styles.screen}>
+    <View style={[styles.screen, isPhoneLandscape && styles.screenLandscape]}>
       <View style={styles.card}>
         <Text style={styles.heading}>Rediger innlegg</Text>
 
@@ -82,11 +85,15 @@ export default function EditPostScreen() {
   );
 }
 
+// FORUM: ???
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: Theme.background,
-    padding: Theme.spacing.lg,
+    padding: Theme.spacing.sm,
+  },
+  screenLandscape: {
+
   },
   card: {
     backgroundColor: Theme.surface,
@@ -154,6 +161,6 @@ const styles = StyleSheet.create({
   submitText: {
     fontSize: Theme.fontSize.md,
     fontWeight: "600",
-    color: Theme.textInverted,
+    color: Theme.inputBg,
   },
 });

@@ -2,18 +2,32 @@ import { View, Text, FlatList, ActivityIndicator, Pressable, StyleSheet} from "r
 import { router } from "expo-router";
 import { usePosts } from "../../../context/PostContext";
 import PostCard from "../../../components/posts/post-card";
-import { Theme } from "../../../constants/theme";
+import { colors, fontSize, spacing } from "../../../constants/theme";
 import PostComposer from "../../../components/posts/post-composer";
+import { authStyles } from "../../../styles/authStyles";
+import { useState } from "react";
+import { ApiPost } from "../../../api/posts";
 
 export default function ListPostScreen() {
   const { posts, isLoading, error } = usePosts();
+  const [ selectedPost, setSelectedPost ] = useState<ApiPost | null > (null);
+  const [ modalVisible, setModalVisible ] = useState(false);
+
+  const openPost = (post: ApiPost) => {
+    setSelectedPost(post);
+    setModalVisible(true);
+  };
 
   if (isLoading) {
     return <ActivityIndicator />;
   }
 
   if (error) {
-    return <Text>{error}</Text>;
+    return (
+      <View>
+        <Text style={authStyles.error}>{error}</Text>;
+      </View>
+    );
   }
 
   return (
@@ -25,7 +39,8 @@ export default function ListPostScreen() {
       ListHeaderComponent={<View style={styles.header}><PostComposer /></View>}
       ItemSeparatorComponent={() => <View style={styles.separator} />}
       renderItem={({ item }) => (
-        <Pressable onPress={() => router.push(`/post/${item.id}`)}>
+        <Pressable onPress={() => router.push(`/post/${item.id}`)}
+        style={({ pressed }) => pressed && styles.postPressed}>
           <PostCard post={item} />
         </Pressable>
       )}
@@ -34,21 +49,33 @@ export default function ListPostScreen() {
   </View>
 );
 }
+
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: Theme.background,
+    backgroundColor: colors.background,
   },
   list: {
-    padding: Theme.spacing.lg,
+    width: "100%",
+    maxWidth: 720,
+    alignSelf: "center",
+    padding: spacing.lg,
   },
   header: {
-    marginBottom: Theme.spacing.xl,
+    gap: spacing.lg,
+    marginBottom: spacing.xl,
   },
   separator: {
-    height: Theme.spacing.xl,
+    height: spacing.lg,
+  },
+  postPressed: {
+    opacity: 0.85,
+    transform: [{ scale: 0.99}]
   },
   empty: {
-    color: Theme.textMuted,
+    marginTop: spacing.xl,
+    color: colors.textMuted,
+    fontSize: fontSize.md, 
+    textAlign: "center",
   },
 });
