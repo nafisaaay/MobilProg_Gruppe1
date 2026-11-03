@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { View, Text, Pressable, StyleSheet, ScrollView } from "react-native";
+import { View, Text, Pressable, StyleSheet, ScrollView, Alert } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import Ionicons from "@react-native-vector-icons/ionicons";
 import { usePosts } from "../../../context/PostContext";
-import { Theme } from "../../../constants/theme";
+import { Theme, colors, radius, spacing, fontSize } from "../../../constants/theme";
 
 export default function PostDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -19,6 +19,9 @@ export default function PostDetailScreen() {
       </View>
     );
   }
+  /* Kun forfatter/eier som får se "rediger" og "slett" etter åpning av innlegg
+  const isOwner = user?.id === post.userId; 
+  */
 
   const handleRemove = async () => {
     setError(null);
@@ -30,8 +33,18 @@ export default function PostDetailScreen() {
     }
   };
 
+  // Bekreftelse av sletting
+  const confirmRemoval = () => {
+    Alert.alert("Slette innlegget?", "Dette kan ikke angres.", [
+      {text: "Avbryt", style: "cancel"},
+      {text: "Slett", style:"destructive", onPress: handleRemove},
+    ]);
+  };
+
   return (
     <ScrollView style={styles.screen} contentContainerStyle={styles.content}>
+      <View style={styles.spacer}/>
+      
       <View style={styles.card}>
         <View style={styles.header}>
           <View style={styles.avatar} />
@@ -49,7 +62,7 @@ export default function PostDetailScreen() {
       {error ? <Text style={styles.error}>{error}</Text> : null}
 
       <View style={styles.actions}>
-        <Pressable onPress={handleRemove} style={styles.deleteButton}>
+        <Pressable onPress={confirmRemoval} style={({pressed}) => [styles.deleteButton, pressed && styles.deletePressed]}>
           <Text style={styles.deleteText}>Slett</Text>
         </Pressable>
 
@@ -60,22 +73,33 @@ export default function PostDetailScreen() {
           <Text style={styles.editText}>Rediger</Text>
         </Pressable>
       </View>
+      <View style={styles.spacer}/>
+
     </ScrollView>
   );
 }
 
+// FORUM: NÅR ET INNLEGG ER ÅPENT/TRYKKET PÅ.
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: Theme.background,
+    backgroundColor: colors.background,
+
+  },
+  spacer: {
+    minHeight: spacing.xl,
+
   },
   content: {
-    padding: Theme.spacing.lg,
+    padding: spacing.lg,
+    marginTop: spacing.xl,
   },
   card: {
-    backgroundColor: Theme.surface,
-    borderRadius: Theme.radius.sm,
-    padding: Theme.spacing.lg,
+    backgroundColor: colors.card,
+    borderRadius: radius.xl,
+    padding: spacing.xl,
+    gap: spacing.lg,
+    boxShadow: "0 1px 6px #cfcfcf46",
   },
   header: {
     flexDirection: "row",
@@ -122,13 +146,16 @@ const styles = StyleSheet.create({
     gap: Theme.spacing.md,
     marginTop: Theme.spacing.xl,
   },
- deleteButton: {
-  borderWidth: 1,
-  borderColor: Theme.danger,
-  borderRadius: Theme.radius.full,
-  paddingVertical: Theme.spacing.md,
-  paddingHorizontal: Theme.spacing.xl,
-},
+  deleteButton: {
+    borderWidth: 1,
+    borderColor: colors.danger,
+    borderRadius: radius.full,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.xl,
+  },
+  deletePressed: {
+    backgroundColor: "#d55c5c6e"
+  },
   deleteText: {
     fontSize: Theme.fontSize.md,
     fontWeight: "600",
@@ -143,6 +170,6 @@ const styles = StyleSheet.create({
   editText: {
     fontSize: Theme.fontSize.md,
     fontWeight: "600",
-    color: Theme.textInverted,
+    color: Theme.inputBg,
   },
 });

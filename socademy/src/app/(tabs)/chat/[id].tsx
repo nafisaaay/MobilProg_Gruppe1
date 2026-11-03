@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet } from "react-native";
 import { useLocalSearchParams } from "expo-router";
+import { Theme } from "../../../constants/theme";
 
 export default function ChatScreen() {
     const { id } = useLocalSearchParams<{ id: string }>();
@@ -11,6 +12,11 @@ export default function ChatScreen() {
     );
 }
 
+// CHAT SCREEN: Viser spesifikke chat-samtaler basert på ID
 const styles = StyleSheet.create({
-    title: { fontSize: 30, fontWeight: "bold", color: "#3b82f6" },
+    title: { 
+        fontSize: Theme.fontSize.lg, 
+        fontWeight: "bold", 
+        color: "#bb1616",
+    },
 });

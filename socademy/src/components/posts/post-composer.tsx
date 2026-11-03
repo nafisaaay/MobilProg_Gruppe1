@@ -1,41 +1,47 @@
 import { Pressable, View, Text, StyleSheet } from "react-native";
 import { router } from "expo-router";
-import { Theme } from "../../constants/theme";
+import { colors, spacing, fontSize, radius } from "../../constants/theme";
 
 export default function PostComposer() {
   return (
-    <Pressable onPress={() => router.push("/new-post")} style={styles.box}>
-      <View style={styles.avatar} />
-      <View>
+    <Pressable 
+      onPress={() => router.push("/new-post")} 
+      style={ ({ pressed }) => [styles.box, pressed && styles.boxPressed]}>
+      
+      <View style={styles.fakeInput}>
         <Text style={styles.title}>Post innlegg</Text>
-        <Text style={styles.hint}>Hva har du i dine tanker?</Text>
+        <Text style={styles.textHint}>Hva har du i dine tanker?</Text>
       </View>
+
     </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
-  box: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: Theme.spacing.lg,
-    backgroundColor: Theme.surfaceAlt,
-    borderRadius: Theme.radius.lg,
-    padding: Theme.spacing.lg,
+  fakeInput: {
+    backgroundColor: colors.surface,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.lg,
+    minHeight: 96,
   },
-  avatar: {
-    width: 56,
-    height: 56,
-    borderRadius: Theme.radius.full,
-    backgroundColor: Theme.placeholder,
+  box: {
+    backgroundColor: colors.surface,
+    borderRadius: radius.xl,
+    padding: spacing.xl,
+    boxShadow: "0 1px 6px #bbbbbb88",
+  },
+  boxPressed: {
+    opacity: 0.85,
+    transform: [{ scale: 0.99 }],
   },
   title: {
-    fontSize: Theme.fontSize.lg,
+    fontSize: 16,
     fontWeight: "600",
-    color: Theme.text,
   },
-  hint: {
-    fontSize: Theme.fontSize.md,
-    color: Theme.textSubtle,
+  textHint: {
+    fontSize: fontSize.md,
+    color: colors.textSubtle,
+    marginTop: spacing.md,
+    fontStyle: "italic",
   },
 });

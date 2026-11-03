@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet } from "react-native";
 import type { ApiPost } from "../../api/posts";
-import { Theme } from "../../constants/theme";
+import { colors, spacing, fontSize, radius } from "../../constants/theme";
 import Ionicons from "@react-native-vector-icons/ionicons";
 
 export default function PostCard({ post }: { post: ApiPost }) {
@@ -15,8 +15,8 @@ export default function PostCard({ post }: { post: ApiPost }) {
       </View>
 
       <View style={styles.actions}>
-        <Ionicons name="chatbubble-outline" size={26} color={Theme.icon} />
-        <Ionicons name="heart-outline" size={26} color={Theme.icon} />
+        <Ionicons name="chatbubble-outline" size={26} color={colors.icon} />
+        <Ionicons name="heart-outline" size={26} color={colors.icon} />
       </View>
     </View>
   );
@@ -24,39 +24,40 @@ export default function PostCard({ post }: { post: ApiPost }) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: Theme.surface,
-    borderRadius: Theme.radius.sm,
-    padding: Theme.spacing.lg,
-    minHeight: 200,
+    backgroundColor: colors.card,
+    borderRadius: radius.xl,
+    padding: spacing.xl,
+    gap: spacing.lg,
+    boxShadow: "0 1px 6px #cfcfcf46",
   },
   row: {
     flexDirection: "row",
-    gap: Theme.spacing.lg,
+    alignItems: "center",
+    gap: spacing.md,
   },
   avatar: {
-    width: 80,
-    height: 80,
-    borderRadius: Theme.radius.full,
-    backgroundColor: Theme.placeholder,
+    width: 60,
+    height: 60,
+    borderRadius: radius.full,
+    backgroundColor: colors.avatar,
   },
   content: {
     flex: 1,
+    gap: spacing.sm,
   },
   title: {
-    fontSize: Theme.fontSize.lg,
-    fontWeight: "600",
-    color: Theme.text,
+    fontSize: fontSize.lg,
+    fontWeight: "700",
+    color: colors.text,
   },
   text: {
-    fontSize: Theme.fontSize.md,
-    color: Theme.textMuted,
-    marginTop: Theme.spacing.xs,
+    fontSize: 16,
+    lineHeight: 22,
+    color: colors.text,
   },
   actions: {
     flexDirection: "row",
     justifyContent: "flex-end",
-    gap: Theme.spacing.lg,
-    marginTop: "auto",
-    paddingTop: Theme.spacing.lg,
+    gap: spacing.lg,
   },
 });

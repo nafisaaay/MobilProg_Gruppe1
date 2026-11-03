@@ -67,5 +67,5 @@ const styles = StyleSheet.create({
         backgroundColor: Theme.danger,
     },
     buttonPressed: { opacity: 0.7 },
-    buttonText: { color: Theme.textInverted, fontSize: Theme.fontSize.md, fontWeight: "600"},
+    buttonText: { color: Theme.inputBg, fontSize: Theme.fontSize.md, fontWeight: "600"},
 });

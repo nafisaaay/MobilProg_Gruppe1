@@ -2,7 +2,7 @@ import { useState } from "react";
 import { router } from "expo-router";
 import { View, Text, TextInput, Pressable, StyleSheet } from "react-native";
 import { usePosts } from "../context/PostContext";
-import { Theme } from "../constants/theme";
+import { Theme, colors, spacing, fontSize, radius } from "../constants/theme";
 
 export default function CreatePostScreen() {
   const { addToApi } = usePosts();
@@ -26,33 +26,31 @@ export default function CreatePostScreen() {
 
   return (
     <View style={styles.screen}>
-      <View style={styles.card}>
-        <Text style={styles.heading}>Si hva du tenker!</Text>
+      <Text style={styles.heading}>Publiser nytt innlegg!</Text>
 
-        <Text style={styles.label}>Tittel</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Gi innlegget en tittel"
-          placeholderTextColor={Theme.textSubtle}
-          value={title}
-          onChangeText={setTitle}
-          editable={!isSaving}
-        />
+      <Text style={styles.label}>Tittel</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Gi innlegget en tittel"
+        placeholderTextColor={Theme.textSubtle}
+        value={title}
+        onChangeText={setTitle}
+        editable={!isSaving}
+      />
 
-        <Text style={styles.label}>Tekst</Text>
-        <TextInput
-          style={[styles.input, styles.textArea]}
-          placeholder="Hva har du i dine tanker?"
-          placeholderTextColor={Theme.textSubtle}
-          value={text}
-          onChangeText={setText}
-          multiline
-          textAlignVertical="top"
-          editable={!isSaving}
-        />
+      <Text style={styles.label}>Tekst</Text>
+      <TextInput
+        style={[styles.input, styles.textArea]}
+        placeholder="Hva har du i dine tanker?"
+        placeholderTextColor={Theme.textSubtle}
+        value={text}
+        onChangeText={setText}
+        multiline
+        textAlignVertical="top"
+        editable={!isSaving}
+      />
 
-        {error ? <Text style={styles.error}>{error}</Text> : null}
-      </View>
+      {error ? <Text style={styles.error}>{error}</Text> : null}
 
       <View style={styles.actions}>
         <Pressable onPress={() => router.back()} style={styles.cancelButton}>
@@ -71,74 +69,74 @@ export default function CreatePostScreen() {
   );
 }
 
+// FORUM: LAG NY INNLEGG.
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: Theme.background,
-    padding: Theme.spacing.lg,
+    backgroundColor: colors.background,
+    padding: spacing.xl,
+    marginTop: spacing.xl,
   },
-  card: {
-    backgroundColor: Theme.surface,
-    borderRadius: Theme.radius.lg,
-    padding: Theme.spacing.lg,
-  },
+  
   heading: {
-    fontSize: Theme.fontSize.xl,
+    fontSize: fontSize.lg,
+    alignSelf: "center",
     fontWeight: "700",
-    color: Theme.text,
-    marginBottom: Theme.spacing.lg,
+    color: colors.text,
+    marginBottom: spacing.xl,
   },
   label: {
-    fontSize: Theme.fontSize.md,
+    fontSize: fontSize.md,
     fontWeight: "600",
-    color: Theme.text,
-    marginBottom: Theme.spacing.xs,
+    color: colors.text,
+    marginTop: spacing.lg,
+    marginBottom: spacing.sm
   },
   input: {
-    backgroundColor: Theme.background,
-    borderWidth: 1,
-    borderColor: Theme.border,
-    borderRadius: Theme.radius.md,
-    paddingHorizontal: Theme.spacing.md,
-    paddingVertical: Theme.spacing.sm,
-    fontSize: Theme.fontSize.md,
-    color: Theme.text,
-    marginBottom: Theme.spacing.lg,
+    backgroundColor: colors.inputBg,
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.md,
+    fontSize: fontSize.md,
+    color: colors.text,
+    marginBottom: spacing.lg,
+    boxShadow: "0 1px 6px #cfcfcf46",
   },
   textArea: {
-    minHeight: 140,
+    minHeight: 200,
   },
   error: {
-    color: Theme.danger,
-    fontSize: Theme.fontSize.md,
+    color: colors.danger,
+    fontSize: fontSize.md,
   },
   actions: {
     flexDirection: "row",
     justifyContent: "flex-end",
-    gap: Theme.spacing.md,
-    marginTop: Theme.spacing.xl,
+    gap: spacing.md,
+    marginTop: spacing.xl,
   },
   cancelButton: {
-    paddingVertical: Theme.spacing.md,
-    paddingHorizontal: Theme.spacing.lg,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.lg,
   },
   cancelText: {
-    fontSize: Theme.fontSize.md,
+    fontSize: fontSize.md,
     fontWeight: "600",
-    color: Theme.textMuted,
+    color: colors.textMuted,
   },
   submitButton: {
-    backgroundColor: Theme.primary,
-    borderRadius: Theme.radius.full,
-    paddingVertical: Theme.spacing.md,
-    paddingHorizontal: Theme.spacing.xl,
+    backgroundColor: colors.primary,
+    borderRadius: radius.full,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.xl,
   },
   submitButtonDimmed: {
     opacity: 0.6,
   },
   submitText: {
-    fontSize: Theme.fontSize.md,
+    fontSize: fontSize.md,
     fontWeight: "600",
-    color: Theme.textInverted,
+    color: colors.inputBg,
   },
 });

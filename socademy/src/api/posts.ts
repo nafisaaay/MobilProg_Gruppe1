@@ -6,7 +6,7 @@ export const BASE_URL = `${SERVER_URL}/api/v3`;
 export const ApiPostScehma = z.object({
     id: z.number(),
     title: z.string(), 
-    text: z.string()
+    text: z.string(),
 });
 
 export type ApiPost = z.infer<typeof ApiPostScehma>;

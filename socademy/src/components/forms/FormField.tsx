@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TextInput, type TextInputProps, View } from "react-native";
-import { Theme } from "../../constants/theme";
+import { spacing, colors, fontSize, radius } from "../../constants/theme";
 
 // Intersection-type
 type FormFieldProps = TextInputProps & {
@@ -22,17 +22,17 @@ export function FormField({ label, error, style, ...inputProps}: FormFieldProps)
 }
 
 const styles = StyleSheet.create({
-    field: { gap: Theme.spacing.xs, marginTop: Theme.spacing.sm },
-    label: { fontSize: Theme.fontSize.md, fontWeight: "600", color: Theme.text },
+    field: { gap: spacing.xs, marginTop: spacing.sm },
+    label: { fontSize: fontSize.md, fontWeight: "600", color: colors.text },
     input: {
         borderWidth: 1,
-        borderColor: Theme.border,
-        borderRadius: Theme.radius.md,
-        padding: Theme.spacing.md,
-        fontSize: Theme.fontSize.md,
-        backgroundColor: Theme.textInverted,
-        color: Theme.text,
+        borderColor: colors.border,
+        borderRadius: radius.md,
+        padding: spacing.md,
+        fontSize: fontSize.md,
+        backgroundColor: colors.inputBg,
+        color: colors.text,
     },
-    inputError: { borderColor: Theme.danger },
-    error: { color: Theme.danger, fontSize: Theme.fontSize.sm },
+    inputError: { borderColor: colors.danger },
+    error: { color: colors.danger, fontSize: fontSize.sm },
 });

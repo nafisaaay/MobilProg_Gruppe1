@@ -2,8 +2,9 @@
  * Ett sted for alle designverdier.
  * Alle StyleSheet-objekter i appen leser fra dette objektet.
  */
-export const Theme = {
+
   // Farger
+export const colors = {
   background: "#F3FCF8", // lys mintgrønn bakgrunn
   surface: "#ECF0EE",    // innleggskort
   surfaceAlt: "#E8EBE9", // "Post innlegg"-boksen
@@ -16,30 +17,36 @@ export const Theme = {
   textSubtle: "#9CA3AF",
   icon: "#6B7280",
   border: "#d1d5db",
+  inputBg: "#ffffff",
+  card: "#ffffff",
+  avatar: "#d1eae3",
+} as const;
 
   // Avstander
-  spacing: {
-    xs: 4,
-    sm: 8,
-    md: 12,
-    lg: 16,
-    xl: 24,
-  },
+export const spacing = {
+  xs: 4,
+  sm: 8,
+  md: 12,
+  lg: 16,
+  xl: 24,
+} as const;
 
   // Hjørneradius
-  radius: {
-    sm: 6,
-    md: 10,
-    lg: 16,
-    full: 999,
-  },
+export const radius = {
+  sm: 6,
+  md: 10,
+  lg: 16,
+  xl: 20,
+  full: 999,
+} as const;
 
   // Skriftstørrelser
-  fontSize: {
-    sm: 12,
-    md: 14,
-    lg: 18,
-    xl: 24,
-  },
-  textInverted: "#ffffff",
+export const fontSize = {
+  sm: 12,
+  md: 14,
+  lg: 18,
+  xl: 24,
 } as const;
+
+// Samlet slik at koden som allered efinnes med Theme... fortsatt fungerer (til man får endret)
+export const Theme = {...colors, spacing, radius, fontSize } as const;
