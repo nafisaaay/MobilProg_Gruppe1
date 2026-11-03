@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { View, Text, TextInput, Pressable, Switch } from "react-native";
+import { createEvent } from "../api/events";
 
-export function CreateEvent() {
+export function CreateEvent({ onCreated }: { onCreated: () => void }) {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [date, setDate] = useState("");
@@ -9,6 +10,7 @@ export function CreateEvent() {
     const [location, setLocation] = useState("");
     const [category, setCategory] = useState("");
     const [isOutdoor, setIsOutdoor] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
 
     // Gjelder kategori dropdown, legg til flere/endre om dere vil
@@ -27,18 +29,32 @@ export function CreateEvent() {
         location.trim() === "" ||
         category === "";
 
+    async function onSubmit() {
+        setError(null);
+        try {
+            await createEvent({
+                title,
+                description,
+                location,
+                startsAt: `${date}T${time}`,
+            });
+            onCreated();
+        } catch (err) {
+            setError(err instanceof Error ? err.message : "Kunne ikke lagre");
+        }
+    }
 
     return (
         <View>
-        <Text> Tittel</Text>
-        <TextInput
-            accessibilityLabel="Tittel"
-            placeholder="Skriv en tittel"
-            value={title}
-            onChangeText={setTitle}
-        />
+            <Text> Tittel</Text>
+            <TextInput
+                accessibilityLabel="Tittel"
+                placeholder="Skriv en tittel"
+                value={title}
+                onChangeText={setTitle}
+            />
 
-        <Text>Beskrivelse</Text>
+            <Text>Beskrivelse</Text>
             <TextInput
                 accessibilityLabel="description"
                 placeholder="Skriv en beskrivelse"
@@ -55,7 +71,7 @@ export function CreateEvent() {
             />
 
             <Text>Tid</Text>
-             <TextInput
+            <TextInput
                 accessibilityLabel="time"
                 placeholder="TT:MM"
                 value={time}
@@ -71,7 +87,7 @@ export function CreateEvent() {
 
             />
 
-                
+
             <Text>Kategori</Text>
 
             <Pressable onPress={() => setCategory("social")}>
@@ -91,7 +107,7 @@ export function CreateEvent() {
             </Pressable>
 
             <Text>Valgt: {category}</Text>
-  
+
 
             <Text>Utendørs</Text>
             <Switch
@@ -101,9 +117,11 @@ export function CreateEvent() {
             />
 
 
-        <Pressable disabled={isDisabled}>
+            <Pressable disabled={isDisabled} onPress={onSubmit}>
                 <Text>{isDisabled ? "Lagre (fyll ut alle feltene)" : "Lagre"}</Text>
             </Pressable>
+            {error ? <Text accessibilityRole="alert">{error}</Text> : null}
+
         </View>
     );
 }

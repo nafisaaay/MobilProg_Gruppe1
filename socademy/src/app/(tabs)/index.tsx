@@ -8,37 +8,26 @@ import { CreateEvent } from "../../components/CreateEvent";
 import { UpcomingEvents } from "../../components/calendar/UpcomingEvents";
 import { Theme } from "../../constants/theme";
 import type { YearMonth } from "../../utils/calendarUtils";
-
-const API_URL = "http://10.0.2.2:5173";
-
-type Event = {
-    id: number;
-    title: string;
-    description: string | null;
-    location: string | null;
-    startsAt: string;
-    endsAt: string | null;
-    createdBy: string;
-    createdAt: string;
-};
+import { getAllEvents, type ApiEvent } from "../../api/events";
 
 export default function CalendarScreen() {
 
     const now = new Date();
     const [yearMonth, setYearMonth] = useState<YearMonth>({ year: now.getFullYear(), month: now.getMonth() });
     const [selectedDate, setSelectedDate] = useState<string | null>(null);
-    const [events, setEvents] = useState<Event[]>([]);
+    const [events, setEvents] = useState<ApiEvent[]>([]);
 
-    useEffect(() => {
         async function loadEvents() {
-            try {
-                const res = await fetch(`${API_URL}/api/v1/events`);
-                const json = await res.json();
-                if (json.ok) setEvents(json.data);
-            } catch (error) {
-                console.log("Klarte ikke hente events", error);
-            }
+        try {
+            const data = await getAllEvents();
+            setEvents(data);
+        } catch (error) {
+            console.log("Klarte ikke hente events", error);
         }
+    }
+
+    // Henter events én gang når skjermen åpnes
+    useEffect(() => {
         loadEvents();
     }, []);
 
@@ -89,7 +78,12 @@ export default function CalendarScreen() {
                 </View>
 
                 <ScrollView>
-                    <CreateEvent />
+                    <CreateEvent
+                        onCreated={() => {
+                            setIsOpen(false);   // lukker modalen
+                            loadEvents();       // henter events på nytt, så den nye prikken vises
+                        }}
+                    />
                 </ScrollView>
             </Modal>
         </View>
