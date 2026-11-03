@@ -1,6 +1,6 @@
 import { Link } from "expo-router";
 import { View, Text, StyleSheet } from "react-native";
-import { Theme } from "../../../constants/theme";
+import { fontSize } from "../../../constants/theme";
 
 export default function ChatListScreen() {
     return (
@@ -14,8 +14,8 @@ export default function ChatListScreen() {
 
 const styles = StyleSheet.create({
     title: { 
-        fontSize: Theme.fontSize.lg, 
+        fontSize: fontSize.lg, 
         fontWeight: "bold", 
         color: "#bb1616",
     },
-});
+}); 

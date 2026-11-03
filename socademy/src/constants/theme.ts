@@ -3,14 +3,14 @@
  * Alle StyleSheet-objekter i appen leser fra dette objektet.
  */
 
-  // Farger
+// Farger
 export const colors = {
   background: "#F3FCF8", // lys mintgrønn bakgrunn
-  surface: "#ECF0EE",    // innleggskort
+  surface: "#ECF0EE", // innleggskort
   surfaceAlt: "#E8EBE9", // "Post innlegg"-boksen
   placeholder: "#E2E6E4", // avatar-sirkler
-  accent: "#FDEFAA",     // gul, for valgte filtre senere
-  primary: "#4A9FE0",    // blå fra logoen
+  accent: "#FDEFAA", // gul, for valgte filtre senere
+  primary: "#4A9FE0", // blå fra logoen
   danger: "#d32f2f",
   text: "#111827",
   textMuted: "#6B7280",
@@ -22,7 +22,7 @@ export const colors = {
   avatar: "#d1eae3",
 } as const;
 
-  // Avstander
+// Avstander
 export const spacing = {
   xs: 4,
   sm: 8,
@@ -31,7 +31,7 @@ export const spacing = {
   xl: 24,
 } as const;
 
-  // Hjørneradius
+// Hjørneradius
 export const radius = {
   sm: 6,
   md: 10,
@@ -40,7 +40,7 @@ export const radius = {
   full: 999,
 } as const;
 
-  // Skriftstørrelser
+// Skriftstørrelser
 export const fontSize = {
   sm: 12,
   md: 14,
@@ -48,5 +48,6 @@ export const fontSize = {
   xl: 24,
 } as const;
 
-// Samlet slik at koden som allered efinnes med Theme... fortsatt fungerer (til man får endret)
-export const Theme = {...colors, spacing, radius, fontSize } as const;
+export const common = {
+  pressed: { opacity: 0.5 },
+} as const;

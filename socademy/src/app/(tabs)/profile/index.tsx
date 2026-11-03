@@ -1,6 +1,6 @@
 import { View, Text, Pressable, Image, StyleSheet } from "react-native";
 import { useAuth } from "../../../context/AuthContext";
-import { Theme } from "../../../constants/theme";
+import { colors, common, fontSize, radius, spacing } from "../../../constants/theme";
 import { useState } from "react";
 
 
@@ -27,7 +27,7 @@ export default function ProfileScreen() {
 
             <Pressable
                 onPress={handleLogout}
-                style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
+                style={({ pressed }) => [styles.button, pressed && common.pressed]}
             >
                 <Text style={styles.buttonText}>Logg ut</Text>
             </Pressable>
@@ -39,33 +39,36 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: "center",
-        gap: Theme.spacing.sm,
-        padding: Theme.spacing.lg,
-        backgroundColor: Theme.background,
+        gap: spacing.sm,
+        padding: spacing.lg,
+        backgroundColor: colors.background,
     },
     avatar: {
         width: 120,
         height: 120,
-        borderRadius: Theme.radius.full,
-        marginBottom: Theme.spacing.md
+        borderRadius: radius.full,
+        marginBottom: spacing.md
     },
     name: {
-        fontSize: Theme.fontSize.xl,
+        fontSize: fontSize.xl,
         fontWeight: "600",
-        color: Theme.text
+        color: colors.text
     },
     email: {
-        fontSize: Theme.fontSize.md, 
-        color: Theme.textMuted
+        fontSize: fontSize.md, 
+        color: colors.textMuted
     },
-    error: { color: Theme.danger },
+    error: { color: colors.danger },
     button: {
-        marginTop: Theme.spacing.xl,
-        paddingVertical: Theme.spacing.md,
-        paddingHorizontal: Theme.spacing.xl,
-        borderRadius: Theme.radius.md,
-        backgroundColor: Theme.danger,
+        marginTop: spacing.xl,
+        paddingVertical: spacing.md,
+        paddingHorizontal: spacing.xl,
+        borderRadius: radius.md,
+        backgroundColor: colors.danger,
     },
-    buttonPressed: { opacity: 0.7 },
-    buttonText: { color: Theme.inputBg, fontSize: Theme.fontSize.md, fontWeight: "600"},
+
+    buttonText: { 
+        color: colors.inputBg, 
+        fontSize: fontSize.md, 
+        fontWeight: "600"},
 });

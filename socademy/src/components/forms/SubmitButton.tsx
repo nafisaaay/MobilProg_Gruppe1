@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, Text } from "react-native";
-import { Theme } from "../../constants/theme";
+import { colors, fontSize, radius, spacing } from "../../constants/theme";
 
 
 type SubmitButtonProps = {
@@ -24,12 +24,12 @@ export function SubmitButton({ title, loadingTitle, isLoading, onPress }: Submit
 
 const styles = StyleSheet.create({
     button: {
-        marginTop: Theme.spacing.lg,
-        padding: Theme.spacing.md,
-        borderRadius: Theme.radius.md,
-        backgroundColor: Theme.primary,
+        marginTop: spacing.lg,
+        padding: spacing.md,
+        borderRadius: radius.md,
+        backgroundColor: colors.primary,
         alignItems: "center",
     },
     pressed: { opacity: 0.7 },
-    text: { color: Theme.inputBg, fontSize: Theme.fontSize.md, fontWeight: "600" },
+    text: { color: colors.inputBg, fontSize: fontSize.md, fontWeight: "600" },
 });
