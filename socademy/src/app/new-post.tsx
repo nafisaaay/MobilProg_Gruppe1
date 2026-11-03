@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { router } from "expo-router";
-import { View, Text, TextInput, Pressable, StyleSheet } from "react-native";
 import { usePosts } from "../context/PostContext";
 import { Theme } from "../constants/theme";
+import { createEvent } from "../api/events";
+import { View, Text, TextInput, Pressable, StyleSheet, Switch } from "react-native";
 
 export default function CreatePostScreen() {
   const { addToApi } = usePosts();
@@ -11,11 +12,26 @@ export default function CreatePostScreen() {
   const [error, setError] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
 
+   const [isEvent, setIsEvent] = useState(false);
+  const [eventDate, setEventDate] = useState("");
+  const [eventTime, setEventTime] = useState("");
+  const [location, setLocation] = useState("");
+
   async function handleCreatePost() {
     setError(null);
     setIsSaving(true);
     try {
       await addToApi({ title, text });
+            // Er bryteren på, lagres innlegget også som et event i kalenderen
+      if (isEvent) {
+        await createEvent({
+          title,
+          description: text,
+          location,
+          startsAt: `${eventDate}T${eventTime}`,
+        });
+      }
+
       router.back();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Could not create post");
@@ -49,7 +65,49 @@ export default function CreatePostScreen() {
           multiline
           textAlignVertical="top"
           editable={!isSaving}
+
         />
+
+
+                <View style={styles.switchRow}>
+          <Text style={styles.label}>Dette er et event</Text>
+          <Switch value={isEvent} onValueChange={setIsEvent} disabled={isSaving} />
+        </View>
+
+        {/* Vises bare når bryteren er på */}
+        {isEvent ? (
+          <>
+            <Text style={styles.label}>Dato</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="AAAA-MM-DD"
+              placeholderTextColor={Theme.textSubtle}
+              value={eventDate}
+              onChangeText={setEventDate}
+              editable={!isSaving}
+            />
+
+            <Text style={styles.label}>Tid</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="TT:MM"
+              placeholderTextColor={Theme.textSubtle}
+              value={eventTime}
+              onChangeText={setEventTime}
+              editable={!isSaving}
+            />
+
+            <Text style={styles.label}>Sted</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Hvor skjer det?"
+              placeholderTextColor={Theme.textSubtle}
+              value={location}
+              onChangeText={setLocation}
+              editable={!isSaving}
+            />
+          </>
+        ) : null}
 
         {error ? <Text style={styles.error}>{error}</Text> : null}
       </View>
@@ -141,4 +199,13 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: Theme.textInverted,
   },
+
+    switchRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: Theme.spacing.lg,
+  },
+
+
 });

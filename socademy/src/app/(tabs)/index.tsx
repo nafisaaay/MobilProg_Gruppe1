@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
+import { useFocusEffect } from "expo-router";
 import { Modal, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 
 import { Calendar } from "../../components/calendar/Calendar";
@@ -26,10 +27,12 @@ export default function CalendarScreen() {
         }
     }
 
-    // Henter events én gang når skjermen åpnes
-    useEffect(() => {
-        loadEvents();
-    }, []);
+    // Henter events hver gang man går inn på Kalender-fanen
+    useFocusEffect(
+        useCallback(() => {
+            loadEvents();
+        }, [])
+    );
 
     function changeMonth(ym: YearMonth) {
         setYearMonth(ym);
