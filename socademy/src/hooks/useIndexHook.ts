@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Post } from "../utils/PostSchema";
-import { ApiPost, BASE_URL } from "../api/posts";
+import { ApiPost, URL } from "../api/posts";
 
 export function useIndexHook() {
   const [allMyPosts, setAllMyPosts] = useState<ApiPost[]>([]);
@@ -29,7 +29,7 @@ export function useIndexHook() {
   useEffect(() => {
     const fetchPostFromApi = async () => {
       try {
-        const response = await fetch(`${BASE_URL}/posts`);
+        const response = await fetch(`${URL}/posts`);
         if (!response.ok) {
           throw new Error("failed to fetch posts");
         }
