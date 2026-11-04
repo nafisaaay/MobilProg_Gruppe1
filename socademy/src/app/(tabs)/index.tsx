@@ -11,7 +11,7 @@ import {
 
 import { Calendar } from "../../components/calendar/Calendar";
 
-import { CreateEvent } from "../../components/CreateEvent";
+import { CreateEvent } from "../../components/events/CreateEvent";
 
 import { UpcomingEvents } from "../../components/calendar/UpcomingEvents";
 import { colors } from "../../constants/theme";
