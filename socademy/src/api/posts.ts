@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { authClient } from "../lib/auth-client";
-import { BASE_URL } from "../constants/meta";
+import { SERVER_URL } from "../constants/meta";
 
-export const URL = `${BASE_URL}/api/v3`;
+export const BASE_URL = `${SERVER_URL}/api/v3`;
 
 export const ApiPostSchema = z.object({
   id: z.number(),
@@ -26,7 +26,7 @@ async function authHeaders() {
 }
 
 export async function getAllPosts(): Promise<ApiPost[]> {
-  const response = await fetch(`${URL}/posts`, {
+  const response = await fetch(`${BASE_URL}/posts`, {
     headers: await authHeaders(),
     credentials: "omit",
   });
@@ -42,7 +42,7 @@ export async function createPost(input: {
   title: string;
   text: string;
 }): Promise<ApiPost> {
-  const response = await fetch(`${URL}/posts`, {
+  const response = await fetch(`${BASE_URL}/posts`, {
     method: "POST",
     headers: await authHeaders(),
     body: JSON.stringify(input),
@@ -62,7 +62,7 @@ export async function updatePost(
   id: number,
   input: { title?: string; text?: string },
 ): Promise<ApiPost> {
-  const response = await fetch(`${URL}/posts/${id}`, {
+  const response = await fetch(`${BASE_URL}/posts/${id}`, {
     method: "PATCH",
     headers: await authHeaders(),
     body: JSON.stringify(input),
@@ -78,7 +78,7 @@ export async function updatePost(
   return z.object({ data: ApiPostSchema }).parse(json).data;
 }
 export async function getPost(id: number): Promise<ApiPost> {
-  const response = await fetch(`${URL}/posts/${id}`);
+  const response = await fetch(`${BASE_URL}/posts/${id}`);
   if (!response.ok) {
     throw new Error(`Could not get post(${response.status})`);
   }
@@ -87,7 +87,7 @@ export async function getPost(id: number): Promise<ApiPost> {
 }
 
 export async function removePost(id: number): Promise<void> {
-  const response = await fetch(`${URL}/posts/${id}`, {
+  const response = await fetch(`${BASE_URL}/posts/${id}`, {
     method: "DELETE",
     headers: await authHeaders(),
     credentials: "omit",

@@ -1,9 +1,16 @@
 import { useState } from "react";
 import { router } from "expo-router";
 import { usePosts } from "../context/PostContext";
-import { Theme } from "../constants/theme";
+import { colors, spacing, radius, fontSize } from "../constants/theme";
 import { createEvent } from "../api/events";
-import { View, Text, TextInput, Pressable, StyleSheet, Switch } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Pressable,
+  StyleSheet,
+  Switch,
+} from "react-native";
 
 export default function CreatePostScreen() {
   const { addToApi } = usePosts();
@@ -12,7 +19,7 @@ export default function CreatePostScreen() {
   const [error, setError] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
 
-   const [isEvent, setIsEvent] = useState(false);
+  const [isEvent, setIsEvent] = useState(false);
   const [eventDate, setEventDate] = useState("");
   const [eventTime, setEventTime] = useState("");
   const [location, setLocation] = useState("");
@@ -22,7 +29,7 @@ export default function CreatePostScreen() {
     setIsSaving(true);
     try {
       await addToApi({ title, text });
-            // Er bryteren på, lagres innlegget også som et event i kalenderen
+      // Er bryteren på, lagres innlegget også som et event i kalenderen
       if (isEvent) {
         await createEvent({
           title,
@@ -48,68 +55,69 @@ export default function CreatePostScreen() {
       <TextInput
         style={styles.input}
         placeholder="Gi innlegget en tittel"
-        placeholderTextColor={Theme.textSubtle}
+        placeholderTextColor={colors.textSubtle}
         value={title}
         onChangeText={setTitle}
         editable={!isSaving}
       />
 
-        <Text style={styles.label}>Tekst</Text>
-        <TextInput
-          style={[styles.input, styles.textArea]}
-          placeholder="Hva har du i dine tanker?"
-          placeholderTextColor={Theme.textSubtle}
-          value={text}
-          onChangeText={setText}
-          multiline
-          textAlignVertical="top"
-          editable={!isSaving}
+      <Text style={styles.label}>Tekst</Text>
+      <TextInput
+        style={[styles.input, styles.textArea]}
+        placeholder="Hva har du i dine tanker?"
+        placeholderTextColor={colors.textSubtle}
+        value={text}
+        onChangeText={setText}
+        multiline
+        textAlignVertical="top"
+        editable={!isSaving}
+      />
 
+      <View style={styles.switchRow}>
+        <Text style={styles.label}>Dette er et event</Text>
+        <Switch
+          value={isEvent}
+          onValueChange={setIsEvent}
+          disabled={isSaving}
         />
-
-
-                <View style={styles.switchRow}>
-          <Text style={styles.label}>Dette er et event</Text>
-          <Switch value={isEvent} onValueChange={setIsEvent} disabled={isSaving} />
-        </View>
-
-        {/* Vises bare når bryteren er på */}
-        {isEvent ? (
-          <>
-            <Text style={styles.label}>Dato</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="AAAA-MM-DD"
-              placeholderTextColor={Theme.textSubtle}
-              value={eventDate}
-              onChangeText={setEventDate}
-              editable={!isSaving}
-            />
-
-            <Text style={styles.label}>Tid</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="TT:MM"
-              placeholderTextColor={Theme.textSubtle}
-              value={eventTime}
-              onChangeText={setEventTime}
-              editable={!isSaving}
-            />
-
-            <Text style={styles.label}>Sted</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Hvor skjer det?"
-              placeholderTextColor={Theme.textSubtle}
-              value={location}
-              onChangeText={setLocation}
-              editable={!isSaving}
-            />
-          </>
-        ) : null}
-
-        {error ? <Text style={styles.error}>{error}</Text> : null}
       </View>
+
+      {/* Vises bare når bryteren er på */}
+      {isEvent ? (
+        <>
+          <Text style={styles.label}>Dato</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="AAAA-MM-DD"
+            placeholderTextColor={colors.textSubtle}
+            value={eventDate}
+            onChangeText={setEventDate}
+            editable={!isSaving}
+          />
+
+          <Text style={styles.label}>Tid</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="TT:MM"
+            placeholderTextColor={colors.textSubtle}
+            value={eventTime}
+            onChangeText={setEventTime}
+            editable={!isSaving}
+          />
+
+          <Text style={styles.label}>Sted</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Hvor skjer det?"
+            placeholderTextColor={colors.textSubtle}
+            value={location}
+            onChangeText={setLocation}
+            editable={!isSaving}
+          />
+        </>
+      ) : null}
+
+      {error ? <Text style={styles.error}>{error}</Text> : null}
 
       <View style={styles.actions}>
         <Pressable onPress={() => router.back()} style={styles.cancelButton}>
@@ -121,7 +129,9 @@ export default function CreatePostScreen() {
           disabled={isSaving}
           style={[styles.submitButton, isSaving && styles.submitButtonDimmed]}
         >
-          <Text style={styles.submitText}>{isSaving ? "Publiserer..." : "Publiser"}</Text>
+          <Text style={styles.submitText}>
+            {isSaving ? "Publiserer..." : "Publiser"}
+          </Text>
         </Pressable>
       </View>
     </View>
@@ -136,7 +146,7 @@ const styles = StyleSheet.create({
     padding: spacing.xl,
     marginTop: spacing.xl,
   },
-  
+
   heading: {
     fontSize: fontSize.lg,
     alignSelf: "center",
@@ -149,7 +159,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: colors.text,
     marginTop: spacing.lg,
-    marginBottom: spacing.sm
+    marginBottom: spacing.sm,
   },
   input: {
     backgroundColor: colors.inputBg,
@@ -199,12 +209,10 @@ const styles = StyleSheet.create({
     color: colors.inputBg,
   },
 
-    switchRow: {
+  switchRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: Theme.spacing.lg,
+    marginBottom: spacing.lg,
   },
-
-
 });
