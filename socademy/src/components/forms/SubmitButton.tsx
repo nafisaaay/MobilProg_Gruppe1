@@ -31,5 +31,5 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     pressed: { opacity: 0.7 },
-    text: { color: Theme.textInverted, fontSize: Theme.fontSize.md, fontWeight: "600" },
+    text: { color: Theme.inputBg, fontSize: Theme.fontSize.md, fontWeight: "600" },
 });

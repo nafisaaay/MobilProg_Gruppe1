@@ -1,8 +1,8 @@
 import { PostProvider } from "../context/PostContext";
 import { Stack } from "expo-router";
 import { AuthProvider, useAuth } from "../context/AuthContext";
-import { Theme } from "../constants/theme";
 import { Loading } from "../components/shared/Loading";
+import { stackScreenOptions, noHeaderOptions } from "../styles/navStyles";
 
 // Egen komponent fordi useAuth() må kalles UNDER AuthProvider.
 // Kaller vi den i RootLayout, som selv rendrer provideren, finnes ingen
@@ -20,22 +20,28 @@ function RootNavigator() {
     const validUser = user !== null;
 
     return (
-        <Stack screenOptions={{ headerTintColor: Theme.primary }}>
+        <Stack screenOptions={stackScreenOptions}>
             <Stack.Protected guard={!validUser}>
-                <Stack.Screen name="login" options={{ title: "Logg inn" }} />
-                <Stack.Screen name="register" options={{ title: "Registrer deg" }} />
+                <Stack.Screen name="login" options={noHeaderOptions} />
+                <Stack.Screen name="register" options={{ title: "Registrer ny bruker" }} />
             </Stack.Protected>
 
             <Stack.Protected guard={validUser}>
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                 <Stack.Screen
                     name="new-post"
-                    options={{ presentation: "modal", title: "Nytt innlegg" }}
+                    options={{ presentation: "modal", headerShown: false }}
                 />
-                <Stack.Screen name="post/[id]/index" options={{ title: "Innlegg" }} />
+                <Stack.Screen 
+                    name="post/[id]/index" 
+                    options={{ 
+                        headerShown: false,
+                        presentation: "modal"
+                    }}
+                />
                 <Stack.Screen
                     name="post/[id]/update-post"
-                    options={{ presentation: "modal", title: "Rediger innlegg" }}
+                    options={{ presentation: "modal", headerShown: false }}
                 />
             </Stack.Protected>
         </Stack>
