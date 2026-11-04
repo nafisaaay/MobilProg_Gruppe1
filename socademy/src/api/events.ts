@@ -11,6 +11,8 @@ export const ApiEventSchema = z.object({
   title: z.string(),
   description: z.string().nullable(),
   location: z.string().nullable(),
+  category: z.enum(["social", "study", "sports", "other"]),
+  isOutdoor: z.boolean(),
   startsAt: z.string(),
   endsAt: z.string().nullable(),
   createdBy: z.string(),
@@ -45,6 +47,8 @@ export async function createEvent(input: {
   description: string;
   location: string;
   startsAt: string;
+  category: string;
+  isOutdoor: boolean;
 }): Promise<ApiEvent> {
   const response = await fetch(EVENTS_URL, {
     method: "POST",

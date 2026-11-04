@@ -46,8 +46,8 @@ export function CreateEvent({ onCreated }: { onCreated: () => void }) {
         description,
         location,
         startsAt: `${date}T${time}`,
-        category, // Lagt til da det manglet
-        isOutdoor, // Lagt til da det manglet
+        category,
+        isOutdoor,
       });
       onCreated();
     } catch (err) {

@@ -16,6 +16,8 @@ export default function CreatePostScreen() {
   const { addToApi } = usePosts();
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
+  const [category, setCategory] = useState("");
+  const [isOutdoor, setIsOutdoor] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -35,6 +37,8 @@ export default function CreatePostScreen() {
           title,
           description: text,
           location,
+          category,
+          isOutdoor,
           startsAt: `${eventDate}T${eventTime}`,
         });
       }
