@@ -40,7 +40,7 @@ export default function LoginScreen() {
   const { isLandscape } = useOrientation();
 
   return (
-    <SafeAreaView style={commonStyles.screen}>
+    <SafeAreaView style={commonStyles.flex}>
       <KeyboardAvoidingView style={commonStyles.flex} behavior="padding">
         <ScrollView
           contentContainerStyle={commonStyles.scrollContent}

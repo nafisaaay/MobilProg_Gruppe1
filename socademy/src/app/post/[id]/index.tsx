@@ -21,9 +21,11 @@ import {
 import { showComingSoon } from "../../../utils/ComingSoon";
 import { commonStyles } from "../../../styles/commonStyles";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useAuth } from "../../../context/AuthContext";
 
 export default function PostDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { user } = useAuth();
   const { posts, removeToApi } = usePosts();
   const [error, setError] = useState<string | null>(null);
 
@@ -31,14 +33,14 @@ export default function PostDetailScreen() {
 
   if (!post) {
     return (
-      <View style={commonStyles.screen}>
+      <View style={commonStyles.flex}>
         <Text style={commonStyles.notFound}>Fant ikke innlegget</Text>
       </View>
     );
   }
-  /* Kun forfatter/eier som får se "rediger" og "slett" etter åpning av innlegg
-  const isOwner = user?.id === post.userId; 
-  */
+
+  const isOwner = user?.id === post.userId; // Sjekke forfatter/admin ift. redigering/sletting
+  const userInitial = post.userName.charAt(0).toUpperCase(); // Bruker initialer til avatar
 
   const handleRemove = async () => {
     setError(null);
@@ -59,18 +61,22 @@ export default function PostDetailScreen() {
   };
 
   return (
-    <SafeAreaView
-      style={commonStyles.screen}
-      edges={["left", "right", "bottom"]}
-    >
+    <SafeAreaView style={commonStyles.flex} edges={["left", "right", "bottom"]}>
       <ScrollView contentContainerStyle={commonStyles.content}>
         <View style={commonStyles.card}>
-          <View style={commonStyles.header}>
-            <View style={commonStyles.avatar} />
-            <Text style={commonStyles.title}>{post.title}</Text>
+          <View style={commonStyles.authorRow}>
+            <View style={commonStyles.avatar}>
+              <Text style={commonStyles.avatarTxt}>{userInitial}</Text>
+            </View>
+            <Text style={commonStyles.authorName} numberOfLines={1}>
+              {post.userName.toUpperCase()}
+            </Text>
           </View>
 
-          <Text style={commonStyles.text}>{post.text}</Text>
+          <View style={styles.content}>
+            <Text style={styles.title}>{post.title}</Text>
+            <Text style={commonStyles.text}>{post.text}</Text>
+          </View>
 
           <View style={commonStyles.icons}>
             <Pressable
@@ -97,29 +103,31 @@ export default function PostDetailScreen() {
 
         {error ? <Text style={commonStyles.error}>{error}</Text> : null}
 
-        <View style={commonStyles.actions}>
-          <Pressable
-            onPress={confirmRemoval}
-            style={({ pressed }) => [
-              commonStyles.filledBtn,
-              styles.deleteBtn,
-              pressed && common.pressed,
-            ]}
-          >
-            <Text style={commonStyles.btnText}>Slett</Text>
-          </Pressable>
+        {isOwner && (
+          <View style={commonStyles.actions}>
+            <Pressable
+              onPress={confirmRemoval}
+              style={({ pressed }) => [
+                commonStyles.filledBtn,
+                styles.deleteBtn,
+                pressed && common.pressed,
+              ]}
+            >
+              <Text style={commonStyles.btnText}>Slett</Text>
+            </Pressable>
 
-          <Pressable
-            onPress={() => router.push(`/post/${post.id}/update-post`)}
-            style={({ pressed }) => [
-              commonStyles.filledBtn,
-              styles.editBtn,
-              pressed && common.pressed,
-            ]}
-          >
-            <Text style={commonStyles.btnText}>Rediger</Text>
-          </Pressable>
-        </View>
+            <Pressable
+              onPress={() => router.push(`/post/${post.id}/update-post`)}
+              style={({ pressed }) => [
+                commonStyles.filledBtn,
+                styles.editBtn,
+                pressed && common.pressed,
+              ]}
+            >
+              <Text style={commonStyles.btnText}>Rediger</Text>
+            </Pressable>
+          </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -127,6 +135,16 @@ export default function PostDetailScreen() {
 
 // FORUM: NÅR ET INNLEGG ER ÅPENT/TRYKKET PÅ.
 const styles = StyleSheet.create({
+  content: {
+    borderTopColor: "#00000021",
+    borderTopWidth: 0.5,
+    paddingTop: spacing.md,
+  },
+  title: {
+    fontSize: fontSize.lg,
+    fontWeight: 600,
+    marginBottom: spacing.sm,
+  },
   deleteBtn: {
     backgroundColor: colors.danger,
   },

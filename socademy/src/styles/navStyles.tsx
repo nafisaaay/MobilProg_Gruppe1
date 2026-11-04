@@ -2,6 +2,7 @@ import { ComponentProps } from "react";
 import { router, Stack } from "expo-router";
 import { colors, fontSize } from "../constants/theme";
 import { Pressable, Text } from "react-native";
+import Ionicons from "@react-native-vector-icons/ionicons";
 
 // Henter typene fra Stack:
 type StackScreenOptions = ComponentProps<typeof Stack>["screenOptions"];
@@ -10,7 +11,12 @@ type ScreenOptions = ComponentProps<typeof Stack.Screen>["options"];
 // Lukke knapp for modaler
 function CloseBtn() {
   return (
-    <Pressable onPress={() => router.back()} hitSlop={12}>
+    <Pressable
+      onPress={() => router.back()}
+      hitSlop={12}
+      accessibilityLabel="Lukk"
+      accessibilityRole="button"
+    >
       <Text
         style={{
           color: colors.primary,
@@ -18,7 +24,7 @@ function CloseBtn() {
           fontWeight: "600",
         }}
       >
-        X
+        <Ionicons name="close" size={16} color={colors.textSubtle} />
       </Text>
     </Pressable>
   );
@@ -28,15 +34,12 @@ function CloseBtn() {
 export const stackScreenOptions: StackScreenOptions = {
   // Fargestil
   headerTintColor: colors.primary,
-  headerStyle: { backgroundColor: colors.background },
-  contentStyle: { backgroundColor: colors.background },
   headerShadowVisible: false,
 
   // Tittel
   headerTitleStyle: {
     fontSize: fontSize.lg,
     fontWeight: "600",
-    color: colors.text,
   },
   headerTitleAlign: "center", //Denne gjelder mest for Android
 

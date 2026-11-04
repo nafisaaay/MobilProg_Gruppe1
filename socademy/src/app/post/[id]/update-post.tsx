@@ -56,7 +56,7 @@ export default function EditPostScreen() {
   };
 
   return (
-    <SafeAreaView style={commonStyles.screen}>
+    <SafeAreaView style={commonStyles.flex}>
       <KeyboardAvoidingView
         style={commonStyles.flex}
         behavior={Platform.OS === "ios" ? "padding" : undefined} // bruker padding kun hvis appen er på ios. Android gjør det ut ved krymping av appvindu.

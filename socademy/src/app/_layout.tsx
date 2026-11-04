@@ -1,5 +1,5 @@
 import { PostProvider } from "../context/PostContext";
-import { Stack } from "expo-router";
+import { DefaultTheme, Stack, ThemeProvider } from "expo-router";
 import { AuthProvider, useAuth } from "../context/AuthContext";
 import { Loading } from "../components/shared/Loading";
 import {
@@ -7,6 +7,7 @@ import {
   noHeaderOptions,
   modalOptions,
 } from "../styles/navStyles";
+import { colors } from "../constants/theme";
 
 // Egen komponent fordi useAuth() må kalles UNDER AuthProvider.
 // Kaller vi den i RootLayout, som selv rendrer provideren, finnes ingen
@@ -49,12 +50,26 @@ function RootNavigator() {
   );
 }
 
+const AppTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: colors.background,
+    card: "#e2f3eb",
+    primary: colors.primary,
+    text: colors.text,
+    border: colors.border,
+  },
+};
+
 export default function RootLayout() {
   return (
-    <AuthProvider>
-      <PostProvider>
-        <RootNavigator />
-      </PostProvider>
-    </AuthProvider>
+    <ThemeProvider value={AppTheme}>
+      <AuthProvider>
+        <PostProvider>
+          <RootNavigator />
+        </PostProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }

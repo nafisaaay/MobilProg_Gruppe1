@@ -14,6 +14,7 @@ import PostComposer from "../../../components/posts/post-composer";
 import { commonStyles } from "../../../styles/commonStyles";
 import { useState } from "react";
 import { ApiPost } from "../../../api/posts";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ListPostScreen() {
   const { posts, isLoading, error } = usePosts();
@@ -26,19 +27,23 @@ export default function ListPostScreen() {
   };
 
   if (isLoading) {
-    return <ActivityIndicator />;
+    return (
+      <View style={commonStyles.centered}>
+        <ActivityIndicator />
+      </View>
+    );
   }
 
   if (error) {
     return (
-      <View>
+      <View style={commonStyles.centered}>
         <Text style={commonStyles.error}>{error}</Text>;
       </View>
     );
   }
 
   return (
-    <View style={styles.screen}>
+    <SafeAreaView style={commonStyles.flex} edges={["left", "right"]}>
       <FlatList
         data={posts}
         keyExtractor={(post) => String(post.id)}
@@ -61,15 +66,11 @@ export default function ListPostScreen() {
           <Text style={styles.empty}>Ingen innlegg ennå</Text>
         }
       />
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
   list: {
     width: "100%",
     maxWidth: 720,
@@ -77,7 +78,6 @@ const styles = StyleSheet.create({
     padding: spacing.lg,
   },
   header: {
-    gap: spacing.lg,
     marginBottom: spacing.xl,
   },
   separator: {

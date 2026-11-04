@@ -4,9 +4,11 @@ import { colors, spacing, fontSize, radius } from "../constants/theme";
 // Felles styling for logg inn + registreringssiden:
 export const commonStyles = StyleSheet.create({
   // SKJERM (rammeverk)
-  screen: {
+  centered: {
     flex: 1,
-    backgroundColor: colors.background,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: spacing.xl,
   },
   flex: {
     flex: 1,
@@ -38,11 +40,26 @@ export const commonStyles = StyleSheet.create({
     boxShadow: "0 1px 6px #cfcfcf46",
   },
 
+  // Avatar, User/author
   avatar: {
-    width: 64,
-    height: 64,
+    width: 60,
+    height: 60,
     borderRadius: radius.full,
-    backgroundColor: colors.placeholder, // fordi det mangles bilde.
+    backgroundColor: colors.avatar,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  avatarTxt: {},
+  authorRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.md,
+  },
+  authorName: {
+    flex: 1,
+    fontSize: fontSize.md,
+    fontWeight: "700",
+    color: colors.text,
   },
 
   // ERRORS:
