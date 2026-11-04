@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import { createEvent } from "../../api/events";
 import { commonStyles } from "../../styles/commonStyles";
-import { colors, radius } from "../../constants/theme";
+import { colors, radius, spacing } from "../../constants/theme";
 
 export function CreateEvent({ onCreated }: { onCreated: () => void }) {
   const [title, setTitle] = useState("");
@@ -59,8 +59,9 @@ export function CreateEvent({ onCreated }: { onCreated: () => void }) {
     <ScrollView
       contentContainerStyle={commonStyles.content}
       keyboardShouldPersistTaps="handled"
+      style={styles.screen}
     >
-      <View style={styles.viewCard}>
+      <View>
         <Text style={[commonStyles.title, styles.title]}>Opprett ny event</Text>
 
         <Text style={commonStyles.formLabel}>Tittel</Text>
@@ -164,29 +165,46 @@ export function CreateEvent({ onCreated }: { onCreated: () => void }) {
             </Text>
           </Pressable>
         </View>
+        <View style={styles.saveField}>
+          <View>
+            <Text style={commonStyles.formLabel}>Utendørs</Text>
+            <Switch
+              accessibilityLabel="isOutdoor"
+              value={isOutdoor}
+              onValueChange={setIsOutdoor}
+              //trackColor={{ false: colors.accent, true: colors.danger }}
+              //thumbColor={isOutdoor ? "#2563eb" : "#f9fafb"}
+            />
+          </View>
 
-        <Text style={commonStyles.formLabel}>Utendørs</Text>
-        <Switch
-          accessibilityLabel="isOutdoor"
-          value={isOutdoor}
-          onValueChange={setIsOutdoor}
-        />
-
-        <Pressable disabled={isDisabled} onPress={onSubmit}>
-          <Text>{isDisabled ? "Lagre (fyll ut alle feltene)" : "Lagre"}</Text>
-        </Pressable>
-        {error ? (
-          <Text style={commonStyles.error} accessibilityRole="alert">
-            {error}
-          </Text>
-        ) : null}
+          <Pressable
+            disabled={isDisabled}
+            onPress={onSubmit}
+            style={({ pressed }) => [
+              styles.saveBtn,
+              isDisabled ? styles.btnDisabled : styles.btnActive,
+              pressed && !isDisabled && styles.btnPressed,
+            ]}
+          >
+            <Text style={commonStyles.btnText}>
+              {isDisabled ? "Lagre" : "Lagre"}
+            </Text>
+          </Pressable>
+          {error ? (
+            <Text style={commonStyles.error} accessibilityRole="alert">
+              {error}
+            </Text>
+          ) : null}
+        </View>
       </View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  viewCard: {},
+  screen: {
+    backgroundColor: colors.background,
+  },
   title: {
     textAlign: "center",
   },
@@ -210,6 +228,27 @@ const styles = StyleSheet.create({
     boxShadow: "0 1px 6px #cfcfcf46",
   },
   dropItemSelected: {
-    backgroundColor: colors.danger,
+    backgroundColor: colors.primary,
+  },
+  saveField: {
+    marginTop: spacing.xl,
+    flexDirection: "row",
+    gap: spacing.xl,
+  },
+  saveBtn: {
+    flex: 1,
+    marginTop: spacing.lg,
+    borderRadius: radius.full,
+    paddingVertical: spacing.lg,
+    alignItems: "center",
+  },
+  btnDisabled: {
+    backgroundColor: colors.textSubtle,
+  },
+  btnActive: {
+    backgroundColor: colors.primary,
+  },
+  btnPressed: {
+    backgroundColor: "#4594d1",
   },
 });

@@ -51,52 +51,51 @@ export default function CalendarScreen() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <View style={styles.container}>
-      <Calendar
-        year={yearMonth.year}
-        month={yearMonth.month}
-        events={events}
-        selectedDate={selectedDate}
-        onChangeMonth={changeMonth}
-        onSelectDate={setSelectedDate}
-      />
-      <UpcomingEvents events={events} selectedDate={selectedDate} />
+    <ScrollView>
+      <View style={styles.container}>
+        <Calendar
+          year={yearMonth.year}
+          month={yearMonth.month}
+          events={events}
+          selectedDate={selectedDate}
+          onChangeMonth={changeMonth}
+          onSelectDate={setSelectedDate}
+        />
+        <UpcomingEvents events={events} selectedDate={selectedDate} />
 
-      {/* Plussknappen */}
-      <Pressable
-        onPress={() => setIsOpen(true)}
-        accessibilityRole="button"
-        accessibilityLabel="Ny hendelse"
-        style={styles.fab}
-      >
-        <Text style={styles.fabText}>+</Text>
-      </Pressable>
+        {/* Plussknappen */}
+        <Pressable
+          onPress={() => setIsOpen(true)}
+          accessibilityRole="button"
+          accessibilityLabel="Ny hendelse"
+          style={styles.fab}
+        >
+          <Text style={styles.fabText}>+</Text>
+        </Pressable>
 
-      <Modal
-        visible={isOpen}
-        animationType="slide"
-        presentationStyle="pageSheet"
-        onRequestClose={() => setIsOpen(false)}
-      >
-        <View style={styles.modalHeader}>
-          <Pressable
-            onPress={() => setIsOpen(false)}
-            accessibilityRole="button"
-          >
-            <Text style={styles.closeText}>Lukk</Text>
-          </Pressable>
-        </View>
-
-        <ScrollView>
+        <Modal
+          visible={isOpen}
+          animationType="slide"
+          presentationStyle="pageSheet"
+          onRequestClose={() => setIsOpen(false)}
+        >
+          <View style={styles.modalHeader}>
+            <Pressable
+              onPress={() => setIsOpen(false)}
+              accessibilityRole="button"
+            >
+              <Text style={styles.closeText}>Lukk</Text>
+            </Pressable>
+          </View>
           <CreateEvent
             onCreated={() => {
               setIsOpen(false); // lukker modalen
               loadEvents(); // henter events på nytt, så den nye prikken vises
             }}
           />
-        </ScrollView>
-      </Modal>
-    </View>
+        </Modal>
+      </View>
+    </ScrollView>
   );
 }
 
