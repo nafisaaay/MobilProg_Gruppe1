@@ -4,7 +4,7 @@
     "slug": "socademy",
     "scheme": "socademy",
     "version": "1.0.0",
-    "orientation": "portrait",
+    "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "ios": {
@@ -25,7 +25,8 @@
     "plugins": [
       "expo-router",
       "expo-status-bar",
-      "@react-native-vector-icons/ionicons"
+      "@react-native-vector-icons/ionicons",
+      "expo-secure-store"
     ]
   }
 }

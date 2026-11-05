@@ -1,56 +1,77 @@
 import { Tabs } from "expo-router";
-import { Ionicons } from "@react-native-vector-icons/ionicons";
+import { ComponentProps } from "react";
+import Ionicons from "@react-native-vector-icons/ionicons";
+import { colors, fontSize } from "../../constants/theme";
 
+type TabStyling = ComponentProps<typeof Tabs>["screenOptions"];
 
+const tabStyling: TabStyling = {
+  headerShadowVisible: false,
+
+  tabBarActiveTintColor: colors.primary,
+  tabBarInactiveTintColor: colors.icon,
+  tabBarStyle: {
+    borderTopWidth: 0,
+    boxShadow: "0 -1px 6px #cfcfcf46",
+  },
+  tabBarShowLabel: false,
+};
 
 export default function TabsLayout() {
-    return (
-        <Tabs>
-            <Tabs.Screen
-                name="index"
-                options={{
-                    title: "Kalender",
-                    tabBarIcon: ({ color, size }) => (
-                        <Ionicons name="calendar" color={color} size={size} />
-                    ),
-                }}
+  return (
+    <Tabs screenOptions={tabStyling}>
+      <Tabs.Screen
+        name="index"
+        options={{
+          title: "",
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons
+              name={focused ? "calendar" : "calendar-outline"}
+              color={color}
+              size={size}
             />
-            <Tabs.Screen
-                name="feed"
-                options={{
-                    title: "Feed",
-                    tabBarIcon: ({ color, size }) => (
-                        <Ionicons name="list" color={color} size={size} />
-                    ),
-                }}
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="forum"
+        options={{
+          title: "Forum",
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons
+              name={focused ? "list" : "list-outline"}
+              color={color}
+              size={size}
             />
-            <Tabs.Screen
-                name="chat"
-                options={{
-                    title: "Chat",
-                    tabBarIcon: ({ color, size }) => (
-                        <Ionicons name="chatbubbles" color={color} size={size} />
-                    ),
-                }}
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="chat"
+        options={{
+          title: "Chat",
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons
+              name={focused ? "chatbubbles" : "chatbubbles-outline"}
+              color={color}
+              size={size}
             />
-            <Tabs.Screen
-                name="notifications"
-                options={{
-                    title: "Varsler",
-                    tabBarIcon: ({ color, size }) => (
-                        <Ionicons name="notifications" color={color} size={size} />
-                    ),
-                }}
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: "Profil",
+          tabBarIcon: ({ color, size, focused }) => (
+            <Ionicons
+              name={focused ? "person" : "person-outline"}
+              color={color}
+              size={size}
             />
-            <Tabs.Screen
-                name="profile"
-                options={{
-                    title: "Profil",
-                    tabBarIcon: ({ color, size }) => (
-                        <Ionicons name="person" color={color} size={size} />
-                    ),
-                }}
-            />
-        </Tabs>
-    )
+          ),
+        }}
+      />
+    </Tabs>
+  );
 }

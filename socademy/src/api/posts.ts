@@ -1,0 +1,101 @@
+import { z } from "zod";
+import { authClient } from "../lib/auth-client";
+import { SERVER_URL } from "../constants/meta";
+
+export const BASE_URL = `${SERVER_URL}/api/v3`;
+
+export const ApiPostSchema = z.object({
+  id: z.number(),
+  title: z.string(),
+  text: z.string(),
+  userId: z.string(),
+  userName: z.string().min(1),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+});
+
+export type ApiPost = z.infer<typeof ApiPostSchema>;
+
+// Headere med sesjonen, så serveren vet hvem som sender forespørselen.
+// Sesjonen ligger i SecureStore: getCookie() henter den og gjør den om til en Cookie-header.
+async function authHeaders() {
+  return {
+    "content-type": "application/json",
+    Cookie: await authClient.getCookie(),
+  };
+}
+
+export async function getAllPosts(): Promise<ApiPost[]> {
+  const response = await fetch(`${BASE_URL}/posts`, {
+    headers: await authHeaders(),
+    credentials: "omit",
+  });
+
+  if (!response.ok) {
+    throw new Error(`Could not get all posts(${response.status})`);
+  }
+  const json = await response.json();
+  return z.object({ data: z.array(ApiPostSchema) }).parse(json).data;
+}
+
+export async function createPost(input: {
+  title: string;
+  text: string;
+}): Promise<ApiPost> {
+  const response = await fetch(`${BASE_URL}/posts`, {
+    method: "POST",
+    headers: await authHeaders(),
+    body: JSON.stringify(input),
+  });
+  const json = await response.json();
+  if (!response.ok) {
+    throw new Error(
+      json.error?.fieldErrors?.title?.[0] ??
+        json.error?.message ??
+        `could not save post(${response.status})`,
+    );
+  }
+  return z.object({ data: ApiPostSchema }).parse(json).data;
+}
+
+export async function updatePost(
+  id: number,
+  input: { title?: string; text?: string },
+): Promise<ApiPost> {
+  const response = await fetch(`${BASE_URL}/posts/${id}`, {
+    method: "PATCH",
+    headers: await authHeaders(),
+    body: JSON.stringify(input),
+  });
+  const json = await response.json();
+
+  if (!response.ok) {
+    throw new Error(
+      json.error?.message ?? `could not update (${response.status})`,
+    );
+  }
+
+  return z.object({ data: ApiPostSchema }).parse(json).data;
+}
+export async function getPost(id: number): Promise<ApiPost> {
+  const response = await fetch(`${BASE_URL}/posts/${id}`);
+  if (!response.ok) {
+    throw new Error(`Could not get post(${response.status})`);
+  }
+  const json = await response.json();
+  return z.object({ data: ApiPostSchema }).parse(json).data;
+}
+
+export async function removePost(id: number): Promise<void> {
+  const response = await fetch(`${BASE_URL}/posts/${id}`, {
+    method: "DELETE",
+    headers: await authHeaders(),
+    credentials: "omit",
+  });
+
+  if (response.ok) return;
+  const json = await response.json();
+  throw new Error(
+    json.error?.message ?? `Could not delete post(${response.status})`,
+  );
+}
