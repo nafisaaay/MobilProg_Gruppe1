@@ -1,26 +1,43 @@
 import { useState } from "react";
-import { View, Text, TextInput, Pressable, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Pressable,
+  StyleSheet,
+  KeyboardAvoidingView,
+  ScrollView,
+  Platform,
+} from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
 import { usePosts } from "../../../context/PostContext";
-import { Theme } from "../../../constants/theme";
+import {
+  colors,
+  common,
+  fontSize,
+  radius,
+  spacing,
+} from "../../../constants/theme";
 import useOrientation from "../../../hooks/useOrientation";
+import { commonStyles } from "../../../styles/commonStyles";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function EditPostScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { posts, updateToApi } = usePosts();
   const post = posts.find((p) => p.id === Number(id));
-  
-  const { isPhoneLandscape } = useOrientation();
 
   const [title, setTitle] = useState(post?.title ?? "");
   const [text, setText] = useState(post?.text ?? "");
   const [error, setError] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
 
+  const { isPhoneLandscape } = useOrientation();
+
   if (!post) {
     return (
-      <View style={styles.screen}>
-        <Text style={styles.notFound}>Fant ikke innlegget</Text>
+      <View>
+        <Text style={commonStyles.notFound}>Fant ikke innlegget</Text>
       </View>
     );
   }
@@ -39,128 +56,88 @@ export default function EditPostScreen() {
   };
 
   return (
-    <View style={[styles.screen, isPhoneLandscape && styles.screenLandscape]}>
-      <View style={styles.card}>
-        <Text style={styles.heading}>Rediger innlegg</Text>
-
-        <Text style={styles.label}>Tittel</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Tittel"
-          placeholderTextColor={Theme.textSubtle}
-          value={title}
-          onChangeText={setTitle}
-          editable={!isSaving}
-        />
-
-        <Text style={styles.label}>Tekst</Text>
-        <TextInput
-          style={[styles.input, styles.textArea]}
-          placeholder="Tekst"
-          placeholderTextColor={Theme.textSubtle}
-          value={text}
-          onChangeText={setText}
-          multiline
-          textAlignVertical="top"
-          editable={!isSaving}
-        />
-
-        {error ? <Text style={styles.error}>{error}</Text> : null}
-      </View>
-
-      <View style={styles.actions}>
-        <Pressable onPress={() => router.back()} style={styles.cancelButton}>
-          <Text style={styles.cancelText}>Avbryt</Text>
-        </Pressable>
-
-        <Pressable
-          onPress={handleUpdate}
-          disabled={isSaving}
-          style={[styles.submitButton, isSaving && styles.submitButtonDimmed]}
+    <SafeAreaView style={commonStyles.flex}>
+      <KeyboardAvoidingView
+        style={commonStyles.flex}
+        behavior={Platform.OS === "ios" ? "padding" : undefined} // bruker padding kun hvis appen er på ios. Android gjør det ut ved krymping av appvindu.
+      >
+        <ScrollView
+          contentContainerStyle={[
+            commonStyles.content,
+            isPhoneLandscape && commonStyles.contentLandscape,
+          ]}
+          keyboardShouldPersistTaps="handled"
         >
-          <Text style={styles.submitText}>{isSaving ? "Lagrer..." : "Lagre"}</Text>
-        </Pressable>
-      </View>
-    </View>
+          <View>
+            <Text style={commonStyles.formLabel}>Tittel</Text>
+            <TextInput
+              style={commonStyles.formInput}
+              placeholder="Tittel"
+              placeholderTextColor={colors.textSubtle}
+              value={title}
+              onChangeText={setTitle}
+              editable={!isSaving}
+            />
+
+            <Text style={commonStyles.formLabel}>Tekst</Text>
+            <TextInput
+              style={[commonStyles.formInput, commonStyles.inputTxtArea]}
+              placeholder="Tekst"
+              placeholderTextColor={colors.textSubtle}
+              value={text}
+              onChangeText={setText}
+              multiline
+              textAlignVertical="top"
+              editable={!isSaving}
+            />
+
+            {error ? <Text style={commonStyles.error}>{error}</Text> : null}
+          </View>
+
+          <View style={commonStyles.actions}>
+            <Pressable
+              onPress={() => router.back()}
+              style={({ pressed }) => [
+                styles.cancelBtn,
+                pressed && common.pressed,
+              ]}
+            >
+              <Text style={common.pressed}>Avbryt</Text>
+            </Pressable>
+
+            <Pressable
+              onPress={handleUpdate}
+              disabled={isSaving}
+              style={({ pressed }) => [
+                commonStyles.filledBtn,
+                isSaving && common.pressed,
+                pressed && common.pressed,
+              ]}
+            >
+              <Text style={commonStyles.btnText}>
+                {isSaving ? "Lagrer..." : "Lagre"}
+              </Text>
+            </Pressable>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
-// FORUM: ???
+// FORUM: Rediger innlegg-siden
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: Theme.background,
-    padding: Theme.spacing.sm,
+  cancelBtn: {
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.lg,
   },
-  screenLandscape: {
 
-  },
-  card: {
-    backgroundColor: Theme.surface,
-    borderRadius: Theme.radius.lg,
-    padding: Theme.spacing.lg,
-  },
   heading: {
-    fontSize: Theme.fontSize.xl,
+    fontSize: fontSize.lg,
+    alignSelf: "center",
     fontWeight: "700",
-    color: Theme.text,
-    marginBottom: Theme.spacing.lg,
-  },
-  label: {
-    fontSize: Theme.fontSize.md,
-    fontWeight: "600",
-    color: Theme.text,
-    marginBottom: Theme.spacing.xs,
-  },
-  input: {
-    backgroundColor: Theme.background,
-    borderWidth: 1,
-    borderColor: Theme.border,
-    borderRadius: Theme.radius.md,
-    paddingHorizontal: Theme.spacing.md,
-    paddingVertical: Theme.spacing.sm,
-    fontSize: Theme.fontSize.md,
-    color: Theme.text,
-    marginBottom: Theme.spacing.lg,
-  },
-  textArea: {
-    minHeight: 140,
-  },
-  error: {
-    color: Theme.danger,
-    fontSize: Theme.fontSize.md,
-  },
-  notFound: {
-    color: Theme.textMuted,
-    fontSize: Theme.fontSize.md,
-  },
-  actions: {
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    gap: Theme.spacing.md,
-    marginTop: Theme.spacing.xl,
-  },
-  cancelButton: {
-    paddingVertical: Theme.spacing.md,
-    paddingHorizontal: Theme.spacing.lg,
-  },
-  cancelText: {
-    fontSize: Theme.fontSize.md,
-    fontWeight: "600",
-    color: Theme.textMuted,
-  },
-  submitButton: {
-    backgroundColor: Theme.primary,
-    borderRadius: Theme.radius.full,
-    paddingVertical: Theme.spacing.md,
-    paddingHorizontal: Theme.spacing.xl,
-  },
-  submitButtonDimmed: {
-    opacity: 0.6,
-  },
-  submitText: {
-    fontSize: Theme.fontSize.md,
-    fontWeight: "600",
-    color: Theme.inputBg,
+    color: colors.text,
+    marginTop: spacing.lg,
+    marginBottom: spacing.xl,
   },
 });
