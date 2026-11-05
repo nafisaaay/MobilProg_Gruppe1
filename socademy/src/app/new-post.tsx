@@ -3,6 +3,7 @@ import { router } from "expo-router";
 import { usePosts } from "../context/PostContext";
 import { colors, spacing, radius, fontSize } from "../constants/theme";
 import { createEvent } from "../api/events";
+import { commonStyles } from "../styles/commonStyles";
 import {
   View,
   Text,
@@ -10,6 +11,7 @@ import {
   Pressable,
   StyleSheet,
   Switch,
+  ScrollView,
 } from "react-native";
 
 export default function CreatePostScreen() {
@@ -52,8 +54,8 @@ export default function CreatePostScreen() {
   }
 
   return (
-    <View style={styles.screen}>
-      <Text style={styles.heading}>Publiser nytt innlegg!</Text>
+    <ScrollView style={styles.screen}>
+      <Text style={styles.heading}></Text>
 
       <Text style={styles.label}>Tittel</Text>
       <TextInput
@@ -118,6 +120,54 @@ export default function CreatePostScreen() {
             onChangeText={setLocation}
             editable={!isSaving}
           />
+          <Text style={styles.label}>Kategori</Text>
+          <Pressable
+                      onPress={() => setCategory("social")}
+                      style={[
+                        styles.dropItem,
+                        category === "social" && styles.dropItemSelected,
+                      ]}
+                    >
+                      <Text style={[category === "social" && commonStyles.btnText]}>
+                        Sosialt
+                      </Text>
+                    </Pressable>
+          
+                    <Pressable
+                      onPress={() => setCategory("study")}
+                      style={[
+                        styles.dropItem,
+                        category === "study" && styles.dropItemSelected,
+                      ]}
+                    >
+                      <Text style={[category === "study" && commonStyles.btnText]}>
+                        Akademisk
+                      </Text>
+                    </Pressable>
+          
+                    <Pressable
+                      onPress={() => setCategory("sports")}
+                      style={[
+                        styles.dropItem,
+                        category === "sports" && styles.dropItemSelected,
+                      ]}
+                    >
+                      <Text style={[category === "sports" && commonStyles.btnText]}>
+                        Sport
+                      </Text>
+                    </Pressable>
+          
+                    <Pressable
+                      onPress={() => setCategory("other")}
+                      style={[
+                        styles.dropItem,
+                        category === "other" && styles.dropItemSelected,
+                      ]}
+                    >
+                      <Text style={[category === "other" && commonStyles.btnText]}>
+                        Annet
+                      </Text>
+                    </Pressable>
         </>
       ) : null}
 
@@ -138,7 +188,7 @@ export default function CreatePostScreen() {
           </Text>
         </Pressable>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -148,7 +198,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
     padding: spacing.xl,
-    marginTop: spacing.xl,
+    marginTop: spacing.xs / 2,
+    marginBottom: spacing.xl *2 ,
   },
 
   heading: {
@@ -156,7 +207,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     fontWeight: "700",
     color: colors.text,
-    marginBottom: spacing.xl,
+    marginBottom: spacing.xs,
   },
   label: {
     fontSize: fontSize.md,
@@ -218,5 +269,16 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: spacing.lg,
+  },
+   dropItem: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: radius.sm,
+    marginBottom: spacing.xs,
+    backgroundColor: colors.card,
+    boxShadow: "0 1px 6px #cfcfcf46",
+  },
+  dropItemSelected: {
+    backgroundColor: colors.primary,
   },
 });
